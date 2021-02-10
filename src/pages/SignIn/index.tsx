@@ -11,6 +11,7 @@ import { Container, Title, ForgotPassword, ForgotPasswordText, CreateAccountButt
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import { useAuth } from '../../hooks/auth';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -25,8 +26,12 @@ const SignIn: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
     const passwordInputRef = useRef<TextInput>(null);
     const navigation = useNavigation();
-  
- const handleSignIn = useCallback(async (data: SignInFormData) => {
+    
+  const { signIn, user } = useAuth();
+
+  console.log(user)
+
+  const handleSignIn = useCallback(async (data: SignInFormData) => {
     try {
       formRef.current?.setErrors({});
 
@@ -41,10 +46,10 @@ const SignIn: React.FC = () => {
         abortEarly: false,
       });
 
-      // await signIn({
-      //   email: data.email,
-      //   password: data.password,
-      // });
+      await signIn({
+        email: data.email,
+        password: data.password,
+      });
 
       // history.push('/dashboard');
     } catch (err) {
@@ -61,7 +66,7 @@ const SignIn: React.FC = () => {
         'Ocorreu um erro ao fazer login, cheque as credenciais.',
       );
     }
-    }, []);
+    }, [signIn]);
 
     return (
         <>

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import * as Yup from 'yup';
+import api from '../../services/api';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -44,13 +45,18 @@ const SignUp: React.FC = () => {
           await schema.validate(data, {
             abortEarly: false,
           });
+
+          Alert.alert(
+            'Cadastro realizado com sucesso!',
+            'Você já pode fazer login na aplicação.'
+          )
     
-          // await api.post('/users', data);
-    
-          // history.push('/');
+          navigation.goBack()
         } catch (err) {
           if (err instanceof Yup.ValidationError) {
             const errors = getValidationErrors(err);
+
+            console.log(errors)
     
             formRef.current?.setErrors(errors);
     
@@ -62,7 +68,7 @@ const SignUp: React.FC = () => {
             'Ocorreu um erro ao fazer cadastro, tente novamente.',
           );
         }
-    }, []);
+    }, [navigation]);
 
     return (
         <>
