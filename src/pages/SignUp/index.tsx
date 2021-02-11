@@ -29,11 +29,11 @@ const SignUp: React.FC = () => {
 
     const emailInputRef = useRef<TextInput>(null);
     const passwordInputRef = useRef<TextInput>(null);
-    
+
     const handleSignUp = useCallback(async (data: SignUpFormData) => {
         try {
           formRef.current?.setErrors({});
-    
+
           const schema = Yup.object().shape({
             name: Yup.string().required('Nome obrigatório'),
             email: Yup.string()
@@ -41,28 +41,31 @@ const SignUp: React.FC = () => {
               .required('E-mail obrigatório'),
             password: Yup.string().min(6, 'No mínimo 6 dígitos'),
           });
-    
+
           await schema.validate(data, {
             abortEarly: false,
           });
+
+          await api.post('/users', data);
+
 
           Alert.alert(
             'Cadastro realizado com sucesso!',
             'Você já pode fazer login na aplicação.'
           )
-    
+
           navigation.goBack()
         } catch (err) {
           if (err instanceof Yup.ValidationError) {
             const errors = getValidationErrors(err);
 
             console.log(errors)
-    
+
             formRef.current?.setErrors(errors);
-    
+
             return;
           }
-    
+
           Alert.alert(
             'Erro no cadastro',
             'Ocorreu um erro ao fazer cadastro, tente novamente.',
@@ -77,7 +80,7 @@ const SignUp: React.FC = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 enabled
             >
-                <ScrollView           
+                <ScrollView
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={{ flex: 1 }}>
                     <Container>
@@ -85,7 +88,7 @@ const SignUp: React.FC = () => {
 
                         <Title>Crie sua conta</Title>
                         <Form ref={formRef} onSubmit={handleSignUp}>
-                            <Input                 
+                            <Input
                                 autoCapitalize="words"
                                 name="name"
                                 icon="user"
@@ -95,7 +98,7 @@ const SignUp: React.FC = () => {
                                 emailInputRef.current?.focus();
                                 }}
                             />
-                            <Input 
+                            <Input
                                 ref={emailInputRef}
                                 keyboardType="email-address"
                                 autoCorrect={false}
@@ -108,7 +111,7 @@ const SignUp: React.FC = () => {
                                     passwordInputRef.current?.focus();
                                 }}
                             />
-                            <Input 
+                            <Input
                                 ref={passwordInputRef}
                                 secureTextEntry
                                 name="password"
